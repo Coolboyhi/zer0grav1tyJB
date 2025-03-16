@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space-Themed Login, Key, and Zero GravityJB</title>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80'); /* Space background */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container, .key-container, .zero-gravity-container, .cmd-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            display: none; /* Hide all containers initially */
+        }
+        .login-container h1, .key-container h1, .zero-gravity-container h1 {
+            margin: 0 0 20px;
+            font-size: 24px;
+        }
+        .login-container p, .key-container p, .zero-gravity-container p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .login-container input, .key-container input {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .login-container button, .key-container button, .zero-gravity-container button {
+            background-color: black; /* Black background for buttons */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px 0; /* Add margin between buttons */
+            width: 100%; /* Full width for buttons */
+        }
+        .login-container button:hover, .key-container button:hover, .zero-gravity-container button:hover {
+            background-color: #333; /* Darker black on hover */
+        }
+        .success-message {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .cmd-container {
+            font-family: 'Courier New', monospace; /* Monospace font for CMD look */
+            text-align: left;
+            padding: 20px;
+            max-width: 600px; /* Wider container for CMD */
+            background-color: black; /* Black background for CMD */
+            color: #00ff00; /* Green text for CMD output */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+        }
+        /* New style for the black screen with loading throbber */
+        .black-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black; /* Ensure the background is black */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+            opacity: 0; /* Start with 0 opacity for fade-in */
+            animation: fadeIn 1s ease-in-out forwards; /* Fade-in animation */
+        }
+        /* Loading throbber (spinner) */
+        .loading-throbber {
+            border: 4px solid rgba(255, 255, 255, 0.3); /* Light gray border */
+            border-top: 4px solid white; /* White top border */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite; /* Spin animation */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <h1>Hi, I'm Gravity!</h1>
+        <p>I made this jailbreak for iOS 1-18. But it isn't free...</p>
+        <p>To get a login, DM me on Discord @coolboyhi</p>
+        <input type="text" placeholder="Username" id="username">
+        <input type="password" placeholder="Password" id="password">
+        <button onclick="showKeyPage()">LOGIN</button>
+        <div id="loginSuccessMessage" class="success-message" style="display: none;">Successfully logged in!</div>
+    </div>
+
+    <!-- Key Container -->
+    <div class="key-container" id="keyContainer">
+        <h1>What's the key I gave you?</h1>
+        <input type="text" placeholder="Enter Key" id="key">
+        <button onclick="showZeroGravityPage()">LOG IN</button>
+        <div id="keySuccessMessage" class="success-message" style="display: none;">Key successful!</div>
+    </div>
+
+    <!-- Zero GravityJB Container -->
+    <div class="zero-gravity-container" id="zeroGravityContainer">
+        <h1>Zero gravityJB</h1>
+        <p>iOS 1-18</p>
+        <p>Note:</p>
+        <p>Hi, I'm Gravity! I found glitches and tweaks no one has found yet. Now I made a jailbreak that works from iOS 1-18 on all devices.</p>
+        <p>Your device is compatible!</p>
+        <p>JA1LBRE4K</p>
+        <button onclick="startJailbreak()">Jailbreak</button> <!-- Jailbreak button -->
+        <button onclick="goBackToLogin()">GO BACK TO LOGIN</button>
+    </div>
+
+    <!-- CMD Container -->
+    <div class="cmd-container" id="cmdContainer">
+        <div class="cmd-output" id="cmdOutput"></div>
+    </div>
+
+    <!-- Black Screen with Loading Throbber -->
+    <div class="black-screen" id="blackScreen" style="display: none;">
+        <div class="loading-throbber"></div>
+    </div>
+
+    <script>
+        // Show the login container initially
+        document.getElementById('loginContainer').style.display = 'block';
+
+        function showKeyPage() {
+            // Hide the login container and show the key container
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('keyContainer').style.display = 'block';
+            document.getElementById('loginSuccessMessage').style.display = 'block';
+        }
+
+        function showZeroGravityPage() {
+            // Hide the key container and show the Zero gravityJB container
+            document.getElementById('keyContainer').style.display = 'none';
+            document.getElementById('zeroGravityContainer').style.display = 'block';
+            document.getElementById('keySuccessMessage').style.display = 'block';
+        }
+
+        function goBackToLogin() {
+            // Hide the Zero gravityJB container and show the login container
+            document.getElementById('zeroGravityContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            // Restore the space background
+            document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80")';
+            document.body.style.backgroundColor = ''; // Reset background color
+        }
+
+        function startJailbreak() {
+            // Change the body background to black
+            document.body.style.backgroundImage = 'none';
+            document.body.style.backgroundColor = 'black';
+
+            // Hide the Zero gravityJB container and show the CMD container
+            document.getElementById('zeroGravityContainer').style.display = 'none';
+            document.getElementById('cmdContainer').style.display = 'block';
+
+            const cmdOutput = document.getElementById('cmdOutput');
+            cmdOutput.textContent = ''; // Clear previous output
+
+            // Simulate CMD output
+            setTimeout(() => {
+                cmdOutput.textContent += 'Verifying jailbreak...\n';
+            }, 1000);
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Downloading Sileo from cloud...\n';
+            }, 3000);
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Exploiting kernel (kfd, Landa)...\n';
+            }, 4000);
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Downloading Cydia from cloud...\n';
+            }, 5000);
+
+            const messages = [
+                'Installing _external',
+                'Installing boomerang',
+                'Installing dyldhook',
+                'Installing forkfix',
+                'Installing idownloadd',
+                'Installing jbctl',
+                'Installing launchdhook',
+                'Installing libjailbreak',
+                'Installing rootfulhooks',
+                'Installing systemhook',
+                'Installing watchdoghook',
+                'Installing libintl.8.dylib',
+                'Installing gravitys_tweaks.dll',
+                'Installing gravity.jailbreak.core.dll',
+                'Installing CydiapackageforiOS18.zip',
+                'Installing zebra.ZGJB',
+            ];
+
+            let delay = 6000;
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    cmdOutput.textContent += `${message}...\n`;
+                }, delay + index * 1000);
+            });
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Extracting bootstrap...\n';
+            }, delay + messages.length * 1000 + 2000);
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Initializing jailbreak environment...\n';
+            }, delay + messages.length * 1000 + 5000);
+
+            setTimeout(() => {
+                cmdOutput.textContent += 'Applying blind mount...\n';
+            }, delay + messages.length * 1000 + 6000);
+
+            // After "Applying blind mount", show the black screen with loading throbber
+            setTimeout(() => {
+                // Hide the CMD container
+                document.getElementById('cmdContainer').style.display = 'none';
+
+                // Show the black screen with loading throbber
+                const blackScreen = document.getElementById('blackScreen');
+                blackScreen.style.display = 'flex';
+
+                // After 5 seconds, hide the black screen and return to the login page
+                setTimeout(() => {
+                    blackScreen.style.display = 'none';
+                    goBackToLogin(); // Return to the login page
+                }, 5000); // 5 seconds delay
+            }, delay + messages.length * 1000 + 7000); // 1 second after "Applying blind mount"
+        }
+    </script>
+</body>
+</html>
